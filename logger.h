@@ -64,7 +64,7 @@ class Logger {
                 std::tm* timestamp = std::localtime(&current_time);
                 char buffer[80];
                 strftime(buffer, 80, "%c", timestamp);
-                printf("%s\t", buffer);
+                printf("%s ", buffer);
                 printf("%s:\t", level_string);
                 printf(msg, args...);
                 printf("\n");
