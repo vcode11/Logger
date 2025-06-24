@@ -18,55 +18,31 @@ class Logger {
 
          template<typename ...Args>
         static void Debug(const char *msg, Args... args){
-            if(level <= LogLevel::DEBUG){
-                std::unique_lock<std::mutex> lock(log_mutex);
-                printf("Debug:\t");
-                printf(msg, args...);
-                printf("\n");
-            }
+            log(LogLevel::DEBUG, "DEBUG", msg, args...);
         }
         
         template<typename ...Args>
         static void Info(const char *msg, Args... args){
-            std::unique_lock<std::mutex> lock(log_mutex);
-            if(level <= LogLevel::INFO){
-                printf("INFO:\t");
-                printf(msg, args...);
-                printf("\n");
-            }
+            log(LogLevel::INFO, "INFO", msg, args...);
+            
             
         }
         
         template<typename ...Args>
         static void Warn(const char *msg, Args... args){
-            std::unique_lock<std::mutex> lock(log_mutex);
-            if(level <= LogLevel::WARN) {
-                printf("WARN:\t");
-                printf(msg, args...);
-                printf("\n");
-            }
+            log(LogLevel::WARN, "WARN", msg, args...);
+            
         }
 
         template<typename ...Args>
         static void Error(const char *msg, Args... args){
-            std::unique_lock<std::mutex> lock(log_mutex);
-            if(level <= LogLevel::ERROR)
-            {
-                printf("ERROR:\t");
-                printf(msg, args...);
-                printf("\n");
-            }
+            log(LogLevel::ERROR, "ERROR", msg, args...);
+            
         }
 
         template<typename ...Args>
         static void Fatal(const char *msg, Args... args){
-            std::unique_lock<std::mutex> lock(log_mutex);
-            if(level <= LogLevel::FATAL)
-            {
-                printf("FATAL:\t");
-                printf(msg, args...);
-                printf("\n");
-            }
+            log(LogLevel::FATAL, "FATAL", msg, args...);
         }
 
         static void setLogLevel(LogLevel level_){
@@ -77,6 +53,17 @@ class Logger {
     private:
         static LogLevel level;
         inline static std::mutex log_mutex; // without inline it has some linker issues
+
+        template<typename ...Args>
+        static void log(const LogLevel msg_level, const char *level_string, const char *msg, Args... args) {
+            std::lock_guard<std::mutex> lock(log_mutex);
+            if(level <= msg_level)
+            {
+                printf("%s:\t", level_string);
+                printf(msg, args...);
+                printf("\n");
+            }
+        }
         
 };
 
