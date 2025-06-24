@@ -3,7 +3,7 @@
 
 #include "logger.h"
 void log(int i) {
-    Logger::Info("Well this is a debug line %d", i);
+    LOG_INFO("Well this is a debug line %d", i);
 }
 int main() {
     unsigned int num_threads = {std::thread::hardware_concurrency()*10};
