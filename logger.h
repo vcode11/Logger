@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <thread>
 #include <mutex>
+#include <ctime>
 
 enum LogLevel {
     DEBUG,
@@ -58,7 +59,12 @@ class Logger {
         static void log(const LogLevel msg_level, const char *level_string, const char *msg, Args... args) {
             std::lock_guard<std::mutex> lock(log_mutex);
             if(level <= msg_level)
-            {
+            {       
+                std::time_t current_time = std::time(0);
+                std::tm* timestamp = std::localtime(&current_time);
+                char buffer[80];
+                strftime(buffer, 80, "%c", timestamp);
+                printf("%s\t", buffer);
                 printf("%s:\t", level_string);
                 printf(msg, args...);
                 printf("\n");
